@@ -1,9 +1,9 @@
-<script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+<script setup>
+import PasswordGenerator from '../components/PasswordGenerator.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <PasswordGenerator aria-label="Password Generator Component" />
   </main>
 </template>
