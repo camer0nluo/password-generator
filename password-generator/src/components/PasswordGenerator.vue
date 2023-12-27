@@ -37,13 +37,6 @@
         <p id="password-strength-text" ref="passwordStrengthText"></p>
 
         <PasswordOptions aria-label="Password Options" />
-        <!-- <div>
-          <p>Password: {{ passwordStore.password }}</p>
-        </div>
-        <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          @click="passwordStore.generatePassword" aria-label="Generate Password">
-          Generate Password
-        </button> -->
       </div>
     </div>
   </div>
