@@ -5,10 +5,7 @@
     <div class=" w-full">
       <div>
         <div class="relative w-full">
-          <input @input="updatePassword" ref="password" v-model="passwordStore.password" id="password"
-            v-on:click="checkPasswordStrength"
-            v-on:change="checkPasswordStrength"
-            v-on:input="checkPasswordStrength"
+          <input @change="checkPasswordStrength" ref="password" v-model="passwordStore.password" id="password"
             class="	shadow appearance-none border rounded w-full py-2 px-3 overflow-x-hidden text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             :type="passwordStore.showPassword ? 'text' : 'password'" placeholder="***********"
             aria-label="Password Input Box" />
@@ -26,8 +23,8 @@
             <font-awesome-icon :icon="faCopy" />
           </span>
 
-          <!-- Repeat Icon -->
-          <span @click="passwordStore.generatePassword"
+          <!-- Generate Password Icon -->
+          <span @click="passwordStore.generatePasswordBasedOnType"
             class="input-icon absolute inset-y-0 right-20 flex items-center pr-3 cursor-pointer"
             aria-label="Generate New Password">
             <font-awesome-icon icon="fa-solid fa-rotate-right" />
@@ -43,7 +40,7 @@
 
 <script setup>
 import zxcvbn from 'zxcvbn'
-import { ref } from 'vue'
+import { ref, watch } from 'vue';
 import { usePasswordStore } from '../stores/password'
 import ToastSuccess from '../components/ToastSuccess.vue'
 import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons'
@@ -83,13 +80,11 @@ function checkPasswordStrength() {
   try {
     let val = passwordStore.password
     let result = zxcvbn(val);
-
-    // Update the password strength meter
-    meter.value.value = result.score;
-
     // Update the text indicator
     if (val !== "") {
       passwordStrengthText.value.innerHTML = "Strength: " + strength[result.score];
+      // Update the password strength meter
+      meter.value.value = result.score;
     } else {
       passwordStrengthText.value.innerHTML = "Password Strength can't be calculated";
     }
@@ -123,6 +118,22 @@ meter {
 meter::-webkit-meter-bar {
   background: none;
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+meter[value="1"] {
+  background: red;
+}
+
+meter[value="2"] {
+  background: yellow;
+}
+
+meter[value="3"] {
+  background: orange;
+}
+
+meter[value="4"] {
+  background: green;
 }
 
 /* Webkit based browsers */

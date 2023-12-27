@@ -5,27 +5,30 @@
         <br />
         <label for="length">Password Length:</label>
         <input id="length" type="number" v-model="passwordStore.passwordLength" :min="minPasswordLength"
-            placeholder="Enter password length" aria-label="Password Length" />
+        aria-label="Password Length" />
 
         <label for="password-length" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
             Length</label>
         <input id="default-range" type="range" :min="minPasswordLength" max="100" v-model="passwordStore.passwordLength"
             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
 
+        <span v-show="passwordStore.selectedType === 'Random'">
+            <label for="includeLowercase">Include Lowercase:</label>
+            <input id="includeLowercase" type="checkbox" v-model="passwordStore.includeLowercase"
+                aria-label="Include Lowercase" />
 
-        <label for="includeLowercase">Include Lowercase:</label>
-        <input id="includeLowercase" type="checkbox" v-model="passwordStore.includeLowercase"
-            aria-label="Include Lowercase" />
+            <label for="includeUppercase">Include Uppercase:</label>
+            <input id="includeUppercase" type="checkbox" v-model="passwordStore.includeUppercase"
+                aria-label="Include Uppercase" />
 
-        <label for="includeUppercase">Include Uppercase:</label>
-        <input id="includeUppercase" type="checkbox" v-model="passwordStore.includeUppercase"
-            aria-label="Include Uppercase" />
+            <label for="includeNumbers">Include Numbers:</label>
+            <input id="includeNumbers" type="checkbox" v-model="passwordStore.includeNumbers"
+                aria-label="Include Numbers" />
 
-        <label for="includeNumbers">Include Numbers:</label>
-        <input id="includeNumbers" type="checkbox" v-model="passwordStore.includeNumbers" aria-label="Include Numbers" />
-
-        <label for="includeSymbols">Include Symbols:</label>
-        <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols" aria-label="Include Symbols" />
+            <label for="includeSymbols">Include Symbols:</label>
+            <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols"
+                aria-label="Include Symbols" />
+        </span>
     </div>
     <div class="mx-1.5">
         <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1.5"
@@ -41,7 +44,7 @@
     <div>
         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose a password
             type</label>
-        <select id="types" @change="handleTypeChange" v-model="selectedType"
+        <select id="types" @change="handleTypeChange" v-model="passwordStore.selectedType"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option disabled value="">Choose a password type</option>
             <option value="Random">Random</option>
@@ -53,22 +56,11 @@
   
 <script setup>
 import { usePasswordStore } from '../stores/password'
-import { ref } from 'vue';
-
 const passwordStore = usePasswordStore()
-const minPasswordLength = 12
-
-const selectedType = ref('');
-
+const minPasswordLength = 6
 const handleTypeChange = () => {
-    if (selectedType.value === 'Random') {
-        passwordStore.generatePassword();
-    } else if (selectedType.value === 'Memorable') {
-        passwordStore.generateMemorablePassword();
-    } else if (selectedType.value === 'Pin') {
-        passwordStore.generatePin();
-    }
-};
+    passwordStore.generatePasswordBasedOnType()
+}
 </script>
   
 <style scoped>
