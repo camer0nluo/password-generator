@@ -63,7 +63,6 @@ async function copyPassword() {
   try {
     await navigator.clipboard.writeText(passwordToCopy)
     show()
-    console.log('Password copied to clipboard:', passwordToCopy)
   } catch (error) {
     console.error('Unable to copy password to clipboard:', error)
   }
@@ -91,7 +90,6 @@ function checkPasswordStrength() {
     // Update the text indicator
     if (val !== "") {
       passwordStrengthText.value.innerHTML = "Strength: " + strength[result.score];
-      console.log('Password strength:', strength[result.score])
     } else {
       passwordStrengthText.value.innerHTML = "Password Strength can't be calculated";
     }
