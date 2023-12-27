@@ -27,12 +27,12 @@
         <label for="includeSymbols">Include Symbols:</label>
         <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols" aria-label="Include Symbols" />
     </div>
-    <div class="mx-1.5	">
-        <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    <div class="mx-1.5">
+        <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1.5"
             @click="passwordStore.resetDefaultOptions" aria-label="Generate Password">
             Reset Options
         </button>
-        <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1.5"
             @click="passwordStore.setAsNewDefaultOptions" aria-label="Generate Password">
             Set as default
         </button>

@@ -1,16 +1,17 @@
 <template>
-  <div>
+  <div class="w-full">
     <ToastSuccess v-if="visible" aria-label="Password Copied" toastMessage="Password Copied Successfully." />
     <br />
-    <div class="flex">
+    <div class=" w-full">
       <div>
         <div class="relative w-full">
           <input @input="updatePassword" ref="password" v-model="passwordStore.password" id="password"
+            v-on:click="checkPasswordStrength"
+            v-on:change="checkPasswordStrength"
             v-on:input="checkPasswordStrength"
             class="	shadow appearance-none border rounded w-full py-2 px-3 overflow-x-hidden text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             :type="passwordStore.showPassword ? 'text' : 'password'" placeholder="***********"
             aria-label="Password Input Box" />
-
 
           <!-- Toggle Password Visibility Icon -->
           <span @click="passwordStore.togglePasswordVisibility"
@@ -35,8 +36,6 @@
         </div>
         <meter max="4" id="password-strength-meter" ref="meter"></meter>
         <p id="password-strength-text" ref="passwordStrengthText"></p>
-
-        <PasswordOptions aria-label="Password Options" />
       </div>
     </div>
   </div>
@@ -48,7 +47,7 @@ import { ref } from 'vue'
 import { usePasswordStore } from '../stores/password'
 import ToastSuccess from '../components/ToastSuccess.vue'
 import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons'
-import PasswordOptions from '../components/PasswordOptions.vue'
+
 const passwordStore = usePasswordStore()
 const visible = ref(false)
 
@@ -87,7 +86,7 @@ function checkPasswordStrength() {
     let result = zxcvbn(val);
 
     // Update the password strength meter
-    meter.value = result.score;
+    meter.value.value = result.score;
 
     // Update the text indicator
     if (val !== "") {
