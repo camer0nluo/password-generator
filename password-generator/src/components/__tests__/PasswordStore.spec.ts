@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 
-import {usePasswordStore} from "../../stores/password";
+import { usePasswordStore } from "../../stores/password";
 
 describe('Password Store', () => {
     beforeEach(() => {
@@ -15,20 +15,23 @@ describe('Password Store', () => {
         const password = usePasswordStore()
         expect(password.password).toBe('Generated')
         expect(password.passwordLength).toBe(12)
+        expect(password.includeLowercase).toBe(true)
         expect(password.includeUppercase).toBe(true)
         expect(password.includeNumbers).toBe(true)
         expect(password.includeSymbols).toBe(true)
     })
     it('Update Options', () => {
         const password = usePasswordStore()
-        const options ={
+        const options = {
             passwordLength: 16,
+            includeLowercase: false,
             includeUppercase: false,
             includeNumbers: false,
             includeSymbols: false
         }
         password.updateOptions(options)
         expect(password.passwordLength).toBe(16)
+        expect(password.includeLowercase).toBe(false)
         expect(password.includeUppercase).toBe(false)
         expect(password.includeNumbers).toBe(false)
         expect(password.includeSymbols).toBe(false)

@@ -1,10 +1,11 @@
 <template>
     <div class="backdrop-blur-sm">
         <p>Password Generator Options</p>
+
         <br />
         <label for="length">Password Length:</label>
         <input id="length" type="number" v-model="passwordStore.passwordLength" :min="minPasswordLength"
-            placeholder="Enter password length" aria-label="Password Length"  />
+            placeholder="Enter password length" aria-label="Password Length" />
 
         <label for="password-length" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
             Length</label>
@@ -36,13 +37,38 @@
             Set as default
         </button>
     </div>
+
+    <div>
+        <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose a password
+            type</label>
+        <select id="types" @change="handleTypeChange" v-model="selectedType"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option disabled value="">Choose a password type</option>
+            <option value="Random">Random</option>
+            <option value="Memorable">Memorable</option>
+            <option value="Pin">Pin</option>
+        </select>
+    </div>
 </template>
   
 <script setup>
 import { usePasswordStore } from '../stores/password'
+import { ref } from 'vue';
 
 const passwordStore = usePasswordStore()
 const minPasswordLength = 12
+
+const selectedType = ref('');
+
+const handleTypeChange = () => {
+    if (selectedType.value === 'Random') {
+        passwordStore.generatePassword();
+    } else if (selectedType.value === 'Memorable') {
+        passwordStore.generateMemorablePassword();
+    } else if (selectedType.value === 'Pin') {
+        passwordStore.generatePin();
+    }
+};
 </script>
   
 <style scoped>

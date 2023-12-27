@@ -67,10 +67,29 @@ export const usePasswordStore = defineStore({
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword
     },
-    generatePassword() {
-      // const { passwordLength, includeUppercase, includeNumbers, includeSymbols, includeLowercase } = this
-      // console.log(passwordLength, includeUppercase, includeNumbers, includeSymbols, includeLowercase)
+    generatePin(){
+        const numberCharacters = '0123456789'
+        const characterList = numberCharacters;
+        let password = '';
 
+        // Create an array to hold random values
+        const randomValuesArray = new Uint32Array(this.passwordLength)
+        crypto.getRandomValues(randomValuesArray)
+
+        for (let i = 0; i < this.passwordLength; i++) {
+          const characterIndex = randomValuesArray[i] % characterList.length
+          password += characterList.charAt(characterIndex)
+        }
+
+        this.updatePassword(password)
+    },
+    generateMemorablePassword(){
+      const words = ["apple", "banana", "cherry", "dog", "elephant", "flower", "giraffe"];
+      const randomIndex1 = Math.floor(Math.random() * words.length);
+      const randomIndex2 = Math.floor(Math.random() * words.length);
+      this.updatePassword(words[randomIndex1] + words[randomIndex2])
+    },
+    generatePassword() {
       const lowercaseCharacters = 'abcdefghijklmnopqrstuvwxyz'
       const uppercaseCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
       const numberCharacters = '0123456789'
