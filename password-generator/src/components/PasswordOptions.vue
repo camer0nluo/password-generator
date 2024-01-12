@@ -1,5 +1,5 @@
 <template>
-    <div class="backdrop-blur-sm">
+    <div class="backdrop-blur-sm div-outer ">
         <p>Password Generator Options</p>
 
         <br />
@@ -13,25 +13,44 @@
             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
             @change="passwordStore.generatePasswordOnOptionsChange" />
 
-        <span v-show="passwordStore.selectedType === 'Random'">
-            <label for="includeLowercase">Include Lowercase:</label>
-            <input id="includeLowercase" type="checkbox" v-model="passwordStore.includeLowercase"
-                aria-label="Include Lowercase" @change="passwordStore.generatePasswordOnOptionsChange" />
+        <span v-show="passwordStore.selectedType === 'Random'" class="flex flex-wrap">
+            <div class="w-1/2">
+                <label for="includeLowercase">Include Lowercase:</label>
+                <input id="includeLowercase" type="checkbox" v-model="passwordStore.includeLowercase"
+                    aria-label="Include Lowercase" @change="passwordStore.generatePasswordOnOptionsChange" />
+            </div>
 
-            <label for="includeUppercase">Include Uppercase:</label>
-            <input id="includeUppercase" type="checkbox" v-model="passwordStore.includeUppercase"
-                aria-label="Include Uppercase" @change="passwordStore.generatePasswordOnOptionsChange" />
+            <div class="w-1/2">
+                <label for="includeUppercase">Include Uppercase:</label>
+                <input id="includeUppercase" type="checkbox" v-model="passwordStore.includeUppercase"
+                    aria-label="Include Uppercase" @change="passwordStore.generatePasswordOnOptionsChange" />
+            </div>
 
-            <label for="includeNumbers">Include Numbers:</label>
-            <input id="includeNumbers" type="checkbox" v-model="passwordStore.includeNumbers" aria-label="Include Numbers"
-                @change="passwordStore.generatePasswordOnOptionsChange" />
+            <div class="w-1/2">
+                <label for="includeNumbers">Include Numbers:</label>
+                <input id="includeNumbers" type="checkbox" v-model="passwordStore.includeNumbers"
+                    aria-label="Include Numbers" @change="passwordStore.generatePasswordOnOptionsChange" />
+            </div>
 
-            <label for="includeSymbols">Include Symbols:</label>
-            <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols" aria-label="Include Symbols"
-                @change="passwordStore.generatePasswordOnOptionsChange" />
+            <div class="w-1/2">
+                <label for="includeSymbols">Include Symbols:</label>
+                <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols"
+                    aria-label="Include Symbols" @change="passwordStore.generatePasswordOnOptionsChange" />
+            </div>
         </span>
+        <div>
+            <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose a password
+                type</label>
+            <select id="types" @change="handleTypeChange" v-model="passwordStore.selectedType"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option disabled value="">Choose a password type</option>
+                <option value="Random">Random</option>
+                <option value="Memorable">Memorable</option>
+                <option value="Pin">Pin</option>
+            </select>
+        </div>
     </div>
-    <div class="gap-x-px">
+    <div class="flex justify-end">
         <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1.5"
             @click="passwordStore.resetDefaultOptions" aria-label="Reset Options">
             Reset Options
@@ -40,18 +59,6 @@
             @click="passwordStore.setAsNewDefaultOptions" aria-label="Set as default options">
             Set as default
         </button>
-    </div>
-
-    <div>
-        <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose a password
-            type</label>
-        <select id="types" @change="handleTypeChange" v-model="passwordStore.selectedType"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option disabled value="">Choose a password type</option>
-            <option value="Random">Random</option>
-            <option value="Memorable">Memorable</option>
-            <option value="Pin">Pin</option>
-        </select>
     </div>
 </template>
   
@@ -68,7 +75,7 @@ const handleTypeChange = () => {
 </script>
   
 <style scoped>
-div {
+.div-outer {
     margin-top: 20px;
     padding: 20px;
     border: 1px solid #ccc;
