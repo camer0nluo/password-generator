@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import PasswordGenerator from '../components/PasswordGenerator.vue'
 import PasswordOptions from '../components/PasswordOptions.vue'
 </script>

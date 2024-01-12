@@ -55,7 +55,7 @@
     </div>
 </template>
   
-<script setup>
+<script setup lang="ts">
 import { usePasswordStore } from '../stores/password'
 
 const passwordStore = usePasswordStore()

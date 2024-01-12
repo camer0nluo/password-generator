@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import zxcvbn from 'zxcvbn'
 import { ref, watch } from 'vue';
 import { usePasswordStore } from '../stores/password'
