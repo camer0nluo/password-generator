@@ -1,6 +1,12 @@
-# Password Generator
+# Password Generator Component
 
 This template should help get you started running this project.
+
+```
+cd password-generator
+nvm install
+npm run dev
+```
 
 ## Recommended IDE Setup
 
