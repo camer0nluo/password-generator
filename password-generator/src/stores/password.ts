@@ -1,8 +1,9 @@
 // store.js
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const usePasswordStore = defineStore({
   id: 'password',
+
   state: () => ({
     password: 'Generated',
     showPassword: true,
@@ -18,149 +19,126 @@ export const usePasswordStore = defineStore({
     symbolCharacters: '!@#$%^&*()_+~`|}{[]:;?><,./-=',
     currentType: 'Random',
   }),
-  actions: {
-    updateOptions(options: {
-      passwordLength: number
-      includeLowercase: boolean
-      includeUppercase: boolean
-      includeNumbers: boolean
-      includeSymbols: boolean
-    }) {
-      this.passwordLength = options.passwordLength
-      this.includeLowercase = options.includeLowercase
-      this.includeUppercase = options.includeUppercase
-      this.includeNumbers = options.includeNumbers
-      this.includeSymbols = options.includeSymbols
-    },
-    resetDefaultOptions() {
-      // check if local storage has values
-      // if so, set them
-      // else, set default values
 
-      if (
-        localStorage.getItem('passwordLength') !== null ||
-        localStorage.getItem('includeUppercase') !== null ||
-        localStorage.getItem('includeLowercase') !== null ||
-        localStorage.getItem('includeNumbers') !== null ||
-        localStorage.getItem('includeSymbols') !== null
-      ) {
-        this.passwordLength = parseInt(localStorage.getItem('passwordLength'));
-        this.includeUppercase = localStorage.getItem('includeUppercase');
-        this.includeLowercase = localStorage.getItem('includeLowercase');
-        this.includeNumbers = localStorage.getItem('includeNumbers');
-        this.includeSymbols = localStorage.getItem('includeSymbols');
+  actions: {
+    updateOptions(options) {
+      Object.assign(this, options);
+    },
+
+    resetDefaultOptions() {
+      const localStorageKeys = ['passwordLength', 'includeUppercase', 'includeLowercase', 'includeNumbers', 'includeSymbols'];
+
+      if (localStorageKeys.some(key => localStorage.getItem(key) !== null)) {
+        localStorageKeys.forEach(key => {
+          this[key] = key === 'passwordLength' ? parseInt(localStorage.getItem(key)) : localStorage.getItem(key) === 'true';
+        });
       } else {
-        this.passwordLength = 12
-        this.includeUppercase = true
-        this.includeLowercase = true
-        this.includeNumbers = true
-        this.includeSymbols = true
+        this.passwordLength = 12;
+        this.includeUppercase = true;
+        this.includeLowercase = true;
+        this.includeNumbers = true;
+        this.includeSymbols = true;
       }
     },
 
     setAsNewDefaultOptions() {
-      // set local storage values
-      localStorage.setItem('passwordLength', this.passwordLength)
-      localStorage.setItem('includeLowercase', this.includeLowercase)
-      localStorage.setItem('includeUppercase', this.includeUppercase)
-      localStorage.setItem('includeNumbers', this.includeNumbers)
-      localStorage.setItem('includeSymbols', this.includeSymbols)
+      const localStorageKeys = ['passwordLength', 'includeLowercase', 'includeUppercase', 'includeNumbers', 'includeSymbols'];
+
+      localStorageKeys.forEach(key => localStorage.setItem(key, this[key]));
     },
 
     updatePassword(value) {
-      this.password = value
+      this.password = value;
     },
+
     togglePasswordVisibility() {
-      this.showPassword = !this.showPassword
+      this.showPassword = !this.showPassword;
     },
+
     generatePin() {
-      let password = ''
-
-      // Create an array to hold random values
-      const randomValuesArray = new Uint32Array(this.passwordLength)
-      crypto.getRandomValues(randomValuesArray)
-
-      for (let i = 0; i < this.passwordLength; i++) {
-        const characterIndex = randomValuesArray[i] % this.numberCharacters.length
-        password += this.numberCharacters.charAt(characterIndex)
-      }
-
-      this.updatePassword(password)
+      const password = this.generateRandomPassword(this.numberCharacters);
+      this.updatePassword(password);
     },
+
     generateMemorablePassword() {
       const words = ['apple', 'banana', 'cherry', 'dog', 'elephant', 'flower', 'giraffe'];
+      const password = this.generatePasswordFromList(words);
+      this.updatePassword(password);
+    },
+
+    generatePassword() {
+      const characterList = this.buildCharacterList();
+      const password = this.generateRandomPassword(characterList);
+      this.updatePassword(password);
+    },
+
+    generateRandomPassword(characterList) {
+      let password = '';
+      const randomValuesArray = new Uint32Array(this.passwordLength);
+      crypto.getRandomValues(randomValuesArray);
+
+      for (let i = 0; i < this.passwordLength; i++) {
+        const characterIndex = randomValuesArray[i] % characterList.length;
+        password += characterList.charAt(characterIndex);
+      }
+
+      return password;
+    },
+
+    generatePasswordFromList(wordList) {
       let password = '';
       const maxLength = this.passwordLength;
 
       while (password.length < maxLength) {
-        const randomIndex = Math.floor(Math.random() * words.length);
-        const randomWord = words[randomIndex];
+        const randomIndex = Math.floor(Math.random() * wordList.length);
+        const randomWord = wordList[randomIndex];
 
-        // Add the word to the password, ensuring it doesn't exceed the maxLength
         if (password.length + randomWord.length <= maxLength) {
           password += randomWord;
         } else {
-          // If adding the whole word exceeds the maxLength, add a portion of the word
           const remainingLength = maxLength - password.length;
           password += randomWord.slice(0, remainingLength);
         }
       }
 
-      this.updatePassword(password);
+      return password;
     },
-    generatePassword() {
-      let characterList = ''
-      let password = ''
+
+    buildCharacterList() {
+      let characterList = '';
+
       if (this.includeLowercase) {
-        characterList += this.lowercaseCharacters
+        characterList += this.lowercaseCharacters;
       }
 
       if (this.includeUppercase) {
-        characterList += this.uppercaseCharacters
+        characterList += this.uppercaseCharacters;
       }
 
       if (this.includeNumbers) {
-        characterList += this.numberCharacters
+        characterList += this.numberCharacters;
       }
 
       if (this.includeSymbols) {
-        characterList += this.symbolCharacters
+        characterList += this.symbolCharacters;
       }
 
-      // Create an array to hold random values
-      const randomValuesArray = new Uint32Array(this.passwordLength)
-      // Populate the array with cryptographically secure random values
-      crypto.getRandomValues(randomValuesArray)
-
-      for (let i = 0; i < this.passwordLength; i++) {
-        // https://stackoverflow.com/questions/68617403/how-to-properly-generate-a-random-password-with-the-window-crypto-property
-        // Use the modulo operator to ensure the index is within the bounds of characterList
-        const characterIndex = randomValuesArray[i] % characterList.length
-        password += characterList.charAt(characterIndex)
-      }
-
-      this.updatePassword(password)
+      return characterList;
     },
+
     generatePasswordOnOptionsChange() {
-      if (this.currentType === 'Random') {
-        this.generatePassword()
-      } else if (this.currentType === 'Pin') {
-        this.generatePin()
-      } else if (this.currentType === 'Memorable') {
-        this.generateMemorablePassword()
-      }
+      this.generatePasswordBasedOnType();
     },
+
     generatePasswordBasedOnType() {
-      if (this.selectedType === 'Random') {
-        this.currentType = 'Random'
-        this.generatePassword()
-      } else if (this.selectedType === 'Pin') {
-        this.currentType = 'Pin'
-        this.generatePin()
-      } else if (this.selectedType === 'Memorable') {
-        this.currentType = 'Memorable'
-        this.generateMemorablePassword()
-      }
-    }
-  }
-})
+      const typeMapping = {
+        'Random': this.generatePassword,
+        'Pin': this.generatePin,
+        'Memorable': this.generateMemorablePassword,
+      };
+
+      this.currentType = this.selectedType;
+      typeMapping[this.selectedType]();
+    },
+  },
+});

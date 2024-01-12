@@ -57,13 +57,13 @@
   
 <script setup>
 import { usePasswordStore } from '../stores/password'
-import { storeToRefs } from 'pinia'
+
 const passwordStore = usePasswordStore()
-const { generatePasswordBasedOnType } = storeToRefs(passwordStore)
+
 
 const minPasswordLength = 6
 const handleTypeChange = () => {
-    generatePasswordBasedOnType()
+    passwordStore.generatePasswordBasedOnType()
 }
 </script>
   
