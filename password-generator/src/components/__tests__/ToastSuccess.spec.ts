@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import HelloWorld from '../HelloWorld.vue'
+import ToastSuccess from '../ToastSuccess.vue'
 import { mount } from '@vue/test-utils'
 
-describe('HelloWorld', () => {
+describe('Toast Success ', () => {
   it('renders properly', () => {
-    const wrapper = mount(HelloWorld, { props: { msg: 'Hello Vitest' } })
+    const wrapper = mount(ToastSuccess, { props: { toastMessage: 'Hello Vitest' } })
     expect(wrapper.text()).toContain('Hello Vitest')
   })
 })

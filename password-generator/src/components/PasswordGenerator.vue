@@ -5,30 +5,29 @@
     <div class=" w-full">
       <div>
         <div class="relative w-full">
-          <input @change="checkPasswordStrength" ref="password" v-model="passwordStore.password" id="password"
-            class="	shadow appearance-none border rounded w-full py-2 px-3 overflow-x-hidden text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          <input @input="checkPasswordStrength" ref="password" v-model="passwordStore.password" id="password"
+            class="whitespace-nowrap overflow-hidden overflow-ellipsis shadow appearance-none border rounded w-full py-2 px-3 overflow-x-hidden text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             :type="passwordStore.showPassword ? 'text' : 'password'" placeholder="***********"
             aria-label="Password Input Box" />
+          <div class="flex-shrink-0">
+            <!-- Toggle Password Visibility Icon -->
+            <span @click="passwordStore.togglePasswordVisibility" class="input-icon absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+              aria-label="Toggle Password Visibility">
+              <font-awesome-icon :icon="passwordStore.showPassword ? faEyeSlash : faEye" />
+            </span>
 
-          <!-- Toggle Password Visibility Icon -->
-          <span @click="passwordStore.togglePasswordVisibility"
-            class="input-icon absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
-            aria-label="Toggle Password Visibility">
-            <font-awesome-icon :icon="passwordStore.showPassword ? faEyeSlash : faEye" />
-          </span>
+            <!-- Copy Icon -->
+            <span @click="copyPassword" class="input-icon absolute inset-y-0 right-10 flex items-center pr-3 cursor-pointer" aria-label="Copy Password to Clipboard">
+              <font-awesome-icon :icon="faCopy" />
+            </span>
 
-          <!-- Copy Icon -->
-          <span @click="copyPassword" class="input-icon absolute inset-y-0 right-10 flex items-center pr-3 cursor-pointer"
-            aria-label="Copy Password to Clipboard">
-            <font-awesome-icon :icon="faCopy" />
-          </span>
+            <!-- Generate Password Icon -->
+            <span @click="passwordStore.generatePasswordBasedOnType" @change="checkPasswordStrength"
+            class="input-icon absolute inset-y-0 right-20 flex items-center pr-3 cursor-pointer" aria-label="Generate New Password">
+              <font-awesome-icon icon="fa-solid fa-rotate-right" />
+            </span>
+          </div>
 
-          <!-- Generate Password Icon -->
-          <span @click="passwordStore.generatePasswordBasedOnType"
-            class="input-icon absolute inset-y-0 right-20 flex items-center pr-3 cursor-pointer"
-            aria-label="Generate New Password">
-            <font-awesome-icon icon="fa-solid fa-rotate-right" />
-          </span>
 
         </div>
         <meter max="4" id="password-strength-meter" ref="meter"></meter>
@@ -92,6 +91,10 @@ function checkPasswordStrength() {
     console.error('Unable to get password strength', error)
   }
 }
+
+watch(() => passwordStore.password, () => {
+  checkPasswordStrength();
+});
 
 </script>
 

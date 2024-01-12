@@ -5,13 +5,18 @@ export const usePasswordStore = defineStore({
   id: 'password',
   state: () => ({
     password: 'Generated',
-    showPassword: false,
+    showPassword: true,
     passwordLength: 12,
     includeLowercase: true,
     includeUppercase: true,
     includeNumbers: true,
     includeSymbols: true,
-    selectedType: 'Random'
+    selectedType: 'Random',
+    lowercaseCharacters: 'abcdefghijklmnopqrstuvwxyz',
+    uppercaseCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    numberCharacters: '0123456789',
+    symbolCharacters: '!@#$%^&*()_+~`|}{[]:;?><,./-=',
+    currentType: 'Random',
   }),
   actions: {
     updateOptions(options: {
@@ -39,11 +44,11 @@ export const usePasswordStore = defineStore({
         localStorage.getItem('includeNumbers') !== null ||
         localStorage.getItem('includeSymbols') !== null
       ) {
-        this.passwordLength = localStorage.getItem('passwordLength')
-        this.includeUppercase = localStorage.getItem('includeUppercase')
-        this.includeLowercase = localStorage.getItem('includeLowercase')
-        this.includeNumbers = localStorage.getItem('includeNumbers')
-        this.includeSymbols = localStorage.getItem('includeSymbols')
+        this.passwordLength = parseInt(localStorage.getItem('passwordLength'));
+        this.includeUppercase = localStorage.getItem('includeUppercase');
+        this.includeLowercase = localStorage.getItem('includeLowercase');
+        this.includeNumbers = localStorage.getItem('includeNumbers');
+        this.includeSymbols = localStorage.getItem('includeSymbols');
       } else {
         this.passwordLength = 12
         this.includeUppercase = true
@@ -69,8 +74,6 @@ export const usePasswordStore = defineStore({
       this.showPassword = !this.showPassword
     },
     generatePin() {
-      const numberCharacters = '0123456789'
-      const characterList = numberCharacters
       let password = ''
 
       // Create an array to hold random values
@@ -78,8 +81,8 @@ export const usePasswordStore = defineStore({
       crypto.getRandomValues(randomValuesArray)
 
       for (let i = 0; i < this.passwordLength; i++) {
-        const characterIndex = randomValuesArray[i] % characterList.length
-        password += characterList.charAt(characterIndex)
+        const characterIndex = randomValuesArray[i] % this.numberCharacters.length
+        password += this.numberCharacters.charAt(characterIndex)
       }
 
       this.updatePassword(password)
@@ -88,11 +91,11 @@ export const usePasswordStore = defineStore({
       const words = ['apple', 'banana', 'cherry', 'dog', 'elephant', 'flower', 'giraffe'];
       let password = '';
       const maxLength = this.passwordLength;
-    
+
       while (password.length < maxLength) {
         const randomIndex = Math.floor(Math.random() * words.length);
         const randomWord = words[randomIndex];
-    
+
         // Add the word to the password, ensuring it doesn't exceed the maxLength
         if (password.length + randomWord.length <= maxLength) {
           password += randomWord;
@@ -102,30 +105,26 @@ export const usePasswordStore = defineStore({
           password += randomWord.slice(0, remainingLength);
         }
       }
-    
+
       this.updatePassword(password);
     },
     generatePassword() {
-      const lowercaseCharacters = 'abcdefghijklmnopqrstuvwxyz'
-      const uppercaseCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      const numberCharacters = '0123456789'
-      const symbolCharacters = '!@#$%^&*()_+~`|}{[]:;?><,./-='
       let characterList = ''
       let password = ''
       if (this.includeLowercase) {
-        characterList += lowercaseCharacters
+        characterList += this.lowercaseCharacters
       }
 
       if (this.includeUppercase) {
-        characterList += uppercaseCharacters
+        characterList += this.uppercaseCharacters
       }
 
       if (this.includeNumbers) {
-        characterList += numberCharacters
+        characterList += this.numberCharacters
       }
 
       if (this.includeSymbols) {
-        characterList += symbolCharacters
+        characterList += this.symbolCharacters
       }
 
       // Create an array to hold random values
@@ -134,6 +133,7 @@ export const usePasswordStore = defineStore({
       crypto.getRandomValues(randomValuesArray)
 
       for (let i = 0; i < this.passwordLength; i++) {
+        // https://stackoverflow.com/questions/68617403/how-to-properly-generate-a-random-password-with-the-window-crypto-property
         // Use the modulo operator to ensure the index is within the bounds of characterList
         const characterIndex = randomValuesArray[i] % characterList.length
         password += characterList.charAt(characterIndex)
@@ -141,12 +141,24 @@ export const usePasswordStore = defineStore({
 
       this.updatePassword(password)
     },
+    generatePasswordOnOptionsChange() {
+      if (this.currentType === 'Random') {
+        this.generatePassword()
+      } else if (this.currentType === 'Pin') {
+        this.generatePin()
+      } else if (this.currentType === 'Memorable') {
+        this.generateMemorablePassword()
+      }
+    },
     generatePasswordBasedOnType() {
       if (this.selectedType === 'Random') {
+        this.currentType = 'Random'
         this.generatePassword()
       } else if (this.selectedType === 'Pin') {
+        this.currentType = 'Pin'
         this.generatePin()
       } else if (this.selectedType === 'Memorable') {
+        this.currentType = 'Memorable'
         this.generateMemorablePassword()
       }
     }

@@ -20,6 +20,7 @@
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
+    "vue-types": "^5.1.1",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {

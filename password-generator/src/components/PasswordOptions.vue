@@ -5,38 +5,39 @@
         <br />
         <label for="length">Password Length:</label>
         <input id="length" type="number" v-model="passwordStore.passwordLength" :min="minPasswordLength"
-        aria-label="Password Length" />
+            aria-label="Password Length" @change="passwordStore.generatePasswordOnOptionsChange" />
 
         <label for="password-length" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password
             Length</label>
         <input id="default-range" type="range" :min="minPasswordLength" max="100" v-model="passwordStore.passwordLength"
-            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            @change="passwordStore.generatePasswordOnOptionsChange" />
 
         <span v-show="passwordStore.selectedType === 'Random'">
             <label for="includeLowercase">Include Lowercase:</label>
             <input id="includeLowercase" type="checkbox" v-model="passwordStore.includeLowercase"
-                aria-label="Include Lowercase" />
+                aria-label="Include Lowercase" @change="passwordStore.generatePasswordOnOptionsChange" />
 
             <label for="includeUppercase">Include Uppercase:</label>
             <input id="includeUppercase" type="checkbox" v-model="passwordStore.includeUppercase"
-                aria-label="Include Uppercase" />
+                aria-label="Include Uppercase" @change="passwordStore.generatePasswordOnOptionsChange" />
 
             <label for="includeNumbers">Include Numbers:</label>
-            <input id="includeNumbers" type="checkbox" v-model="passwordStore.includeNumbers"
-                aria-label="Include Numbers" />
+            <input id="includeNumbers" type="checkbox" v-model="passwordStore.includeNumbers" aria-label="Include Numbers"
+                @change="passwordStore.generatePasswordOnOptionsChange" />
 
             <label for="includeSymbols">Include Symbols:</label>
-            <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols"
-                aria-label="Include Symbols" />
+            <input id="includeSymbols" type="checkbox" v-model="passwordStore.includeSymbols" aria-label="Include Symbols"
+                @change="passwordStore.generatePasswordOnOptionsChange" />
         </span>
     </div>
-    <div class="mx-1.5">
+    <div class="gap-x-px">
         <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1.5"
-            @click="passwordStore.resetDefaultOptions" aria-label="Generate Password">
+            @click="passwordStore.resetDefaultOptions" aria-label="Reset Options">
             Reset Options
         </button>
         <button class="bg-[#3d53f6] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-1.5"
-            @click="passwordStore.setAsNewDefaultOptions" aria-label="Generate Password">
+            @click="passwordStore.setAsNewDefaultOptions" aria-label="Set as default options">
             Set as default
         </button>
     </div>
@@ -56,10 +57,13 @@
   
 <script setup>
 import { usePasswordStore } from '../stores/password'
+import { storeToRefs } from 'pinia'
 const passwordStore = usePasswordStore()
+const { generatePasswordBasedOnType } = storeToRefs(passwordStore)
+
 const minPasswordLength = 6
 const handleTypeChange = () => {
-    passwordStore.generatePasswordBasedOnType()
+    generatePasswordBasedOnType()
 }
 </script>
   

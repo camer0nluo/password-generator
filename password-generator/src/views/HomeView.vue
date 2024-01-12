@@ -17,9 +17,35 @@ import PasswordOptions from '../components/PasswordOptions.vue'
 <style>
 .container {
   display: flex;
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Center the content vertically */
-  height: 100vh; /* Set the container height to full viewport height */
+  justify-content: center;
+  /* Center the content horizontally */
+  align-items: center;
+  /* Center the content vertically */
+  height: 100vh;
+  /* Set the container height to full viewport height */
+}
+
+
+@media screen and (max-width: 600px) {
+
+  /* CSS rules for screens with a max width of 600px */
+  .container {
+    margin-top: 10%;
+    flex-direction: column;
+    /* Stack items vertically */
+  }
+
+  .first-div {
+    width: 100%;
+    float: none;
+    box-sizing: border-box;
+  }
+
+  .second-div {
+    width: 100%;
+    float: none;
+    box-sizing: border-box;
+  }
 }
 
 .first-div {
@@ -34,5 +60,4 @@ import PasswordOptions from '../components/PasswordOptions.vue'
   float: right;
   margin: 1%;
   box-sizing: border-box;
-}
-</style>
+}</style>
