@@ -18,6 +18,6 @@ beforeEach(() => {
 
 describe('Password Generator ', () => {
   it('renders properly', () => {
-    expect(wrapper.find('input').element.value).toBe('Generated')
+    expect(wrapper.find('input').element.value).toBe('')
   })
 })

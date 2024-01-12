@@ -5,7 +5,7 @@ export const usePasswordStore = defineStore({
   id: 'password',
 
   state: () => ({
-    password: 'Generated',
+    password: '',
     showPassword: true,
     passwordLength: 12,
     includeLowercase: true,
